@@ -1,0 +1,9 @@
+# Visual Studio project files
+.vs
+
+# Build files
+bin
+obj
+
+# NuGet files
+packages
