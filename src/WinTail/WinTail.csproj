@@ -47,6 +47,9 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleReaderActor.cs" />
+    <Compile Include="ConsoleUtils.cs" />
+    <Compile Include="ConsoleWriterActor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
