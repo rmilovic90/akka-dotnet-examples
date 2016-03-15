@@ -7,24 +7,22 @@ namespace WinTail
     {
         protected override void OnReceive(object message)
         {
-            string receivedMessage = message as string;
-
-            if (string.IsNullOrWhiteSpace(receivedMessage))
+            if (message is Messages.InputError)
             {
-                ConsoleUtils.PrintColoredMessage("Please provide an input.\n", ConsoleColor.DarkYellow);
+                Messages.InputError receivedMessage = message as Messages.InputError;
 
-                return;
+                ConsoleUtils.PrintColoredMessage(receivedMessage.Reason, ConsoleColor.Red);
             }
+            else if (message is Messages.InputSuccess)
+            {
+                Messages.InputSuccess receivedMessage = message as Messages.InputSuccess;
 
-            bool receivedMessageHasEvenNumberOfCharacters = receivedMessage.Length % 2 == 0;
-
-            string resultMessage = "Your string had an " +
-                (receivedMessageHasEvenNumberOfCharacters ? "even " : "odd ") +
-                "number of characters.\n";
-            ConsoleColor resultMessageColor = receivedMessageHasEvenNumberOfCharacters ?
-                ConsoleColor.Red : ConsoleColor.Green;
-
-            ConsoleUtils.PrintColoredMessage(resultMessage, resultMessageColor);
+                ConsoleUtils.PrintColoredMessage(receivedMessage.Reason, ConsoleColor.Green);
+            }
+            else
+            {
+                Console.WriteLine(message);
+            }
         }
     }
 }
