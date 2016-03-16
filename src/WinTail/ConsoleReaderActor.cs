@@ -8,11 +8,11 @@ namespace WinTail
         public const string START_COMMAND = "start";
         public const string EXIT_COMMAND = "exit";
 
-        readonly IActorRef consoleWriterActor;
+        readonly IActorRef validationActor;
 
-        public ConsoleReaderActor(IActorRef consoleWriterActor)
+        public ConsoleReaderActor(IActorRef validationActor)
         {
-            this.consoleWriterActor = consoleWriterActor;
+            this.validationActor = validationActor;
         }
 
         protected override void OnReceive(object message)
@@ -20,10 +20,6 @@ namespace WinTail
             if (message.Equals(START_COMMAND))
             {
                 PrintInstructions();
-            }
-            else if (message is Messages.InputError)
-            {
-                consoleWriterActor.Tell(message as Messages.InputError);
             }
 
             GetAndValidateInput();
@@ -40,29 +36,18 @@ namespace WinTail
         {
             string message = Console.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(message))
-            {
-                Self.Tell(new Messages.NullInputError("No input received."));
-            }
-            else if (message.Equals(EXIT_COMMAND, StringComparison.OrdinalIgnoreCase))
+            if (IsExitCommand(message))
             {
                 Context.System.Terminate();
-            }
-            else
-            {
-                if (isValid(message))
-                {
-                    consoleWriterActor.Tell(new Messages.InputSuccess("Thank you! Message was valid."));
 
-                    Self.Tell(new Messages.ContinueProcessing());
-                }
-                else
-                {
-                    Self.Tell(new Messages.ValidationError("Invalid: input had odd number of characters."));
-                }
+                return;
             }
+
+            validationActor.Tell(message);
         }
 
-        private bool isValid(string message) => message.Length % 2 == 0;
+        private bool IsExitCommand(string message) =>
+            !string.IsNullOrWhiteSpace(message) &&
+            message.Equals(EXIT_COMMAND, StringComparison.OrdinalIgnoreCase);
     }
 }

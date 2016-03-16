@@ -11,18 +11,25 @@ namespace WinTail
             {
                 Messages.InputError receivedMessage = message as Messages.InputError;
 
-                ConsoleUtils.PrintColoredMessage(receivedMessage.Reason, ConsoleColor.Red);
+                PrintColoredMessage(receivedMessage.Reason, ConsoleColor.Red);
             }
             else if (message is Messages.InputSuccess)
             {
                 Messages.InputSuccess receivedMessage = message as Messages.InputSuccess;
 
-                ConsoleUtils.PrintColoredMessage(receivedMessage.Reason, ConsoleColor.Green);
+                PrintColoredMessage(receivedMessage.Reason, ConsoleColor.Green);
             }
             else
             {
                 Console.WriteLine(message);
             }
+        }
+
+        void PrintColoredMessage(string message, ConsoleColor messageColor)
+        {
+            Console.ForegroundColor = messageColor;
+            Console.WriteLine(message);
+            Console.ResetColor();
         }
     }
 }
