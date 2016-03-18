@@ -9,15 +9,15 @@ namespace WinTail
         {
             if (message is Messages.InputError)
             {
-                Messages.InputError receivedMessage = message as Messages.InputError;
+                Messages.InputError inputErrorMessage = message as Messages.InputError;
 
-                PrintColoredMessage(receivedMessage.Reason, ConsoleColor.Red);
+                PrintColoredMessage(inputErrorMessage.Reason, ConsoleColor.Red);
             }
             else if (message is Messages.InputSuccess)
             {
-                Messages.InputSuccess receivedMessage = message as Messages.InputSuccess;
+                Messages.InputSuccess inputSuccessMessage = message as Messages.InputSuccess;
 
-                PrintColoredMessage(receivedMessage.Reason, ConsoleColor.Green);
+                PrintColoredMessage(inputSuccessMessage.Reason, ConsoleColor.Green);
             }
             else
             {
