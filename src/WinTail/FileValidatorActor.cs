@@ -28,7 +28,7 @@ namespace WinTail
                 {
                     consoleWriterActor.Tell(new Messages.InputSuccess($"Starting processing for { filePath }"));
 
-                    Context.ActorSelection($"akka://{ Program.ACTOR_SYSTEM_NAME }/user/{ nameof(TailCoordinatorActor) }")
+                    MyActorSystem.ActorSelections.TailCoordinator
                         .Tell(new TailCoordinatorActor.StartTail(filePath, consoleWriterActor));
                 }
                 else

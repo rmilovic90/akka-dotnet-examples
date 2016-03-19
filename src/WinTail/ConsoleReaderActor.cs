@@ -34,8 +34,7 @@ namespace WinTail
                 return;
             }
 
-            Context.ActorSelection($"akka://{ Program.ACTOR_SYSTEM_NAME }/user/{ nameof(FileValidatorActor) }")
-                .Tell(message);
+            MyActorSystem.ActorSelections.FileValidator.Tell(message);
         }
 
         bool IsExitCommand(string message) =>
