@@ -8,19 +8,23 @@ namespace WinTail
     {
         readonly IActorRef reporterActor;
         readonly string filePath;
-        readonly FileObserver fileObserver;
-        readonly Stream fileStream;
-        readonly StreamReader fileStreamReader;
+
+        FileObserver fileObserver;
+        StreamReader fileStreamReader;
 
         public TailActor(IActorRef reporterActor, string filePath)
         {
             this.reporterActor = reporterActor;
             this.filePath = filePath;
+        }
 
+        protected override void PreStart()
+        {
             fileObserver = new FileObserver(Self, Path.GetFullPath(filePath));
             fileObserver.Start();
 
-            fileStream = new FileStream(Path.GetFullPath(filePath), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            Stream fileStream = new FileStream(Path.GetFullPath(filePath),
+                FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             fileStreamReader = new StreamReader(fileStream, Encoding.UTF8);
 
             string fileText = fileStreamReader.ReadToEnd();
@@ -49,6 +53,17 @@ namespace WinTail
 
                 reporterActor.Tell(initialRead.Text);
             }
+        }
+
+        protected override void PostStop()
+        {
+            fileObserver.Dispose();
+            fileObserver = null;
+
+            fileStreamReader.Close();
+            fileStreamReader.Dispose();
+
+            base.PostStop();
         }
 
         #region Message Types
